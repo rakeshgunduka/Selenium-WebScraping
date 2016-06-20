@@ -26,11 +26,13 @@ class letscrape(object):
 		stock_list = []
 		pages_to_parse = 1
 		for pages in range(pages_to_parse):
+			#get URL
 			browser.get('https://www.quandl.com/data/NSE?keyword=&page='+str(pages))
 			time.sleep(5)
 			i = 0
-			while(i<2):				#Working
-				title = browser.find_elements_by_xpath('//span[contains(@class,"ember-view")]')[i].text
+			while(i<2):
+				#finding elements using xpath
+				title = browser.find_elements_by_xpath('//span[contains(@class,"ember-view")]')[i].text 
 				stock_list.append(title)
 				print title
 				i+=1
@@ -39,6 +41,7 @@ class letscrape(object):
 		df.to_csv("stocklist_csvs/stock"+format(datetime.datetime.now())+".csv", sep='\t')
 		return stock_list
 
+	#Get json data of stocks from quandl
 	def getdataquandl(self,stock_list):
 		#https://www.quandl.com/api/v3/datasets/NSE/20MICRONS.json
 		buffer = StringIO()
@@ -53,8 +56,9 @@ class letscrape(object):
 			with open("data_jsons/stock"+format(datetime.datetime.now())+".json", 'w') as outfile:
 				json.dump(data, outfile)		
 		
-
-
+#Object instantiating
 scrap_obj = letscrape()
+
+#Method Calling
 stock_list = scrap_obj.getquandlstocklist()
 scrap_obj.getdataquandl(stock_list)
